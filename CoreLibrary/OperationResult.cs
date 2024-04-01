@@ -4,7 +4,7 @@
     /// Genel bir işlem durumu, bir mesaj, bir değer ve isteğe bağlı olarak bir hata içeren bir bilgi yapısı.
     /// </summary>
     /// <typeparam name="T">Değer tipi.</typeparam>
-    public class Transaction<T>
+    public class OperationResult<T>
     {
         /// <summary>
         /// İşlemle ilgili bir mesaj.
@@ -24,13 +24,13 @@
         /// <summary>
         /// İşlem sırasında oluşabilecek özel bir istisnai durumu temsil eden özel bir hata nesnesi.
         /// </summary>
-        public TransactionError? Error { get; set; }
+        public OperationError? Error { get; set; }
     }
 
     /// <summary>
     /// Genel bir işlem durumu, bir mesaj, bir değer ve isteğe bağlı olarak bir hata içeren bir bilgi yapısı.
     /// </summary>
-    public class Transaction
+    public class OperationResult
     {
         /// <summary>
         /// İşlemle ilgili bir mesaj.
@@ -50,9 +50,13 @@
         /// <summary>
         /// İşlem sırasında oluşabilecek özel bir istisnai durumu temsil eden özel bir hata nesnesi.
         /// </summary>
-        public TransactionError? Error { get; set; }
+        public OperationError? Error { get; set; }
     }
-    public class TransactionInformation
+
+    /// <summary>
+    /// Sadece işlem sonuç durumu ve isteğe bağlı mesajı içeren yapı.
+    /// </summary>
+    public class OperationResultInfo
     {
         /// <summary>
         /// İşlemle ilgili bir mesaj.
@@ -67,13 +71,13 @@
         /// <summary>
         /// İşlem sırasında oluşabilecek özel bir istisnai durumu temsil eden özel bir hata nesnesi.
         /// </summary>
-        public TransactionError? Error { get; set; }
+        public OperationError? Error { get; set; }
     }
 
     /// <summary>
     /// Özel istisna durumunu temsil eden sınıf.
     /// </summary>
-    public class TransactionError
+    public class OperationError
     {
         /// <summary>
         /// İstisna ile ilişkili mesaj.
@@ -101,5 +105,4 @@
         /// </summary>
         public string? Class { get; set; }
     }
-
 }

@@ -12,13 +12,13 @@ namespace CoreLibrary
         /// <param name="methodFuncT">Çalıştırılacak işlev.</param>
         /// <param name="tryCatchConfiguration">Try-Catch ayarları (isteğe bağlı).</param>
         /// <returns>İşlem bilgisi.</returns>
-        public static Transaction<T> Run<T>(Func<T> methodFuncT, TryCatchConfiguration? tryCatchConfiguration = null)
+        public static OperationResult<T> Run<T>(Func<T> methodFuncT, TryCatchConfiguration? tryCatchConfiguration = null)
         {
             // Try-Catch ayarlarını varsayılan değerle başlat
             tryCatchConfiguration ??= new TryCatchConfiguration();
 
             // İşlem bilgisi oluştur
-            Transaction<T> transaction = new Transaction<T>();
+            OperationResult<T> transaction = new OperationResult<T>();
 
             try
             {
@@ -52,13 +52,13 @@ namespace CoreLibrary
         /// <param name="methodRequest">Çalıştırılacak işlev.</param>
         /// <param name="tryCatchConfiguration">Try-Catch ayarları (isteğe bağlı).</param>
         /// <returns>İşlem bilgisi.</returns>
-        public static Transaction<T> Run<T>(Func<Transaction<T>> methodRequest, TryCatchConfiguration? tryCatchConfiguration = null)
+        public static OperationResult<T> Run<T>(Func<OperationResult<T>> methodRequest, TryCatchConfiguration? tryCatchConfiguration = null)
         {
             // Try-Catch ayarlarını varsayılan değerle başlat
             tryCatchConfiguration ??= new TryCatchConfiguration();
 
             // İşlem bilgisi nesnesini tanımla ve başlangıçta null olarak ayarla
-            Transaction<T>? transaction = null;
+            OperationResult<T>? transaction = null;
 
             try
             {
@@ -70,7 +70,7 @@ namespace CoreLibrary
             catch (Exception ex)
             {
                 // İşlem bilgisi nesnesi henüz oluşturulmamışsa yeni bir nesne oluştur
-                transaction ??= new Transaction<T>();
+                transaction ??= new OperationResult<T>();
 
                 // Hata durumunda istisna bilgisini ve işlem durumunu ayarla
                 transaction.Error = ExceptionDetailsBuilder(ex);
@@ -97,13 +97,13 @@ namespace CoreLibrary
         /// <param name="methodAction">Gerçekleştirilecek işlem.</param>
         /// <param name="tryCatchConfiguration">Try-Catch ayarları (isteğe bağlı).</param>
         /// <returns>İşlem bilgisi.</returns>
-        public static Transaction Run(Action methodAction, TryCatchConfiguration? tryCatchConfiguration = null)
+        public static OperationResult Run(Action methodAction, TryCatchConfiguration? tryCatchConfiguration = null)
         {
             // Try-Catch ayarlarını varsayılan değerle başlat
             tryCatchConfiguration ??= new TryCatchConfiguration();
 
             // İşlem bilgisi nesnesini oluştur
-            Transaction transaction = new Transaction();
+            OperationResult transaction = new OperationResult();
 
             try
             {
@@ -139,10 +139,10 @@ namespace CoreLibrary
         /// </summary>
         /// <param name="exception">İstisna nesnesi.</param>
         /// <returns>Oluşturulan özel istisna nesnesi.</returns>
-        private static TransactionError ExceptionDetailsBuilder(Exception exception)
+        private static OperationError ExceptionDetailsBuilder(Exception exception)
         {
             // Oluşturulacak özel istisna nesnesi
-            TransactionError transactionError = new TransactionError
+            OperationError transactionError = new OperationError
             {
                 Message = exception.Message,
                 Details = new List<ExceptionDetail>()

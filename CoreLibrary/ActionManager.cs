@@ -10,7 +10,7 @@ namespace CoreLibrary
         {
             ActionObject? actionObject = null;
 
-            Transaction transaction = TryCatch.Run(() =>
+            OperationResult transaction = TryCatch.Run(() =>
             {
                 if (!_actionDict.ContainsKey(groupId))
                     _actionDict.Add(groupId, new Dictionary<PriorityLevel, List<ActionObject>>());
@@ -83,7 +83,7 @@ namespace CoreLibrary
         public ActionDelegate ActionPointer { get; set; } = new ActionDelegate(action);
 
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Transaction? Transaction { get; set; }
+        public OperationResult? Transaction { get; set; }
         public void Execute() => Transaction = TryCatch.Run(ActionPointer.Invoke);
     }
 
