@@ -39,7 +39,7 @@ namespace CoreLibrary
                     // Hata günlüğünü kaydetme işlemleri burada gerçekleştirilebilir
                 }
 
-                if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptionHandler(ex);
+                if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptions.Handler(ex);
             }
             // İşlem bilgisini döndür
             return transaction;
@@ -81,7 +81,7 @@ namespace CoreLibrary
                 {
                     // Hata günlüğünü kaydetme işlemleri burada gerçekleştirilebilir
                 }
-                if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptionHandler(ex);
+                if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptions.Handler(ex);
 
                 // Throw ayarı aktifse istisnayı tekrar fırlat
                 if (tryCatchConfiguration.ThrowOnException) throw;
@@ -124,7 +124,7 @@ namespace CoreLibrary
                     // Hata günlüğünü kaydetme işlemleri burada gerçekleştirilebilir
                 }
 
-                if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptionHandler(ex);
+                if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptions.Handler(ex);
 
                 // Throw ayarı aktifse istisnayı tekrar fırlat
                 if (tryCatchConfiguration.ThrowOnException) throw;
@@ -164,33 +164,6 @@ namespace CoreLibrary
 
             // Oluşturulan özel istisna nesnesini döndür
             return transactionError;
-        }
-
-
-        /// <summary>
-        /// Bu metot aldığı hata parametresi ile switch-case'den geçerek ilgili hataya özel işlemlerini yapar.
-        /// </summary>
-        /// <param name="ex"></param>
-        private static void CustomExceptionHandler(Exception ex)
-        {
-            //Console.WriteLine("Bu mesaj custom try-catch metotları için özel hata yakalayıcı kullanılarak yakalanmıştır.");
-
-            switch (ex)
-            {
-                case AggregateException:
-                    Console.WriteLine("Bu hata sistem tarafından gerçekleştirilmiştir.");
-                    break;
-
-                case CustomExceptions.BerkeExcpt:
-                    Console.WriteLine("Burada istediğimiz işlemleri yapabiliriz.");
-                    break;
-
-
-                default:
-                    // Default Yapılandırma.
-                    Console.WriteLine("Bu hata türü için özel bir ayar yapılandırılmamış.");
-                    break;
-            }
         }
     }
     /// <summary>
