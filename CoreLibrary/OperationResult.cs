@@ -9,12 +9,12 @@
         /// <summary>
         /// İşlemle ilgili bir mesaj.
         /// </summary>
-        public string Message { get; set; } = string.Empty;
+        public string? Message { get; set; }
 
         /// <summary>
         /// İşlem durumunu gösteren bir değer. True başarılı bir işlemi, false başarısız bir işlemi temsil eder.
         /// </summary>
-        public bool IsSuccessful { get; set; } = false;
+        public bool IsSuccessful { get; set; }
 
         /// <summary>
         /// İşlem sonucunda elde edilen değer.
@@ -35,12 +35,12 @@
         /// <summary>
         /// İşlemle ilgili bir mesaj.
         /// </summary>
-        public string Message { get; set; } = string.Empty;
+        public string? Message { get; set; }
 
         /// <summary>
         /// İşlem durumunu gösteren bir değer. True başarılı bir işlemi, false başarısız bir işlemi temsil eder.
         /// </summary>
-        public bool IsSuccessful { get; set; } = false;
+        public bool IsSuccessful { get; set; }
 
         /// <summary>
         /// İşlem sonucunda elde edilen değer.
@@ -61,7 +61,7 @@
         /// <summary>
         /// İşlemle ilgili bir mesaj.
         /// </summary>
-        public string Message { get; set; } = string.Empty;
+        public string? Message { get; set; }
 
         /// <summary>
         /// İşlem durumunu gösteren bir değer. True başarılı bir işlemi, false başarısız bir işlemi temsil eder.

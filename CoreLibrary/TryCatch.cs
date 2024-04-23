@@ -141,14 +141,13 @@ namespace CoreLibrary
         /// <returns>Oluşturulan özel istisna nesnesi.</returns>
         private static OperationError ExceptionDetailsBuilder(Exception exception)
         {
-            // Oluşturulacak özel istisna nesnesi
             OperationError transactionError = new OperationError
             {
                 Message = exception.Message,
-                Details = new List<ExceptionDetail>()
+                Details = []
             };
 
-            StackTrace stackTrace = new StackTrace(exception, true);
+            StackTrace stackTrace = new(exception, true);
             int frameCount = stackTrace.FrameCount;
 
             for (int i = 0; i < frameCount; i++)

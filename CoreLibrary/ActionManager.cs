@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
+﻿
 namespace CoreLibrary
 {
     public class ActionManager
@@ -10,20 +9,19 @@ namespace CoreLibrary
         {
             ActionObject? actionObject = null;
 
-            OperationResult transaction = TryCatch.Run(() =>
+            OperationResult operationResult = TryCatch.Run(() =>
             {
                 if (!_actionDict.ContainsKey(groupId))
-                    _actionDict.Add(groupId, new Dictionary<PriorityLevel, List<ActionObject>>());
+                    _actionDict.Add(groupId, []);
 
                 if (!_actionDict[groupId].ContainsKey(level))
-                    _actionDict[groupId][level] = new List<ActionObject>();
+                    _actionDict[groupId][level] = [];
 
                 actionObject = new ActionObject(action);
                 _actionDict[groupId][level].Add(actionObject);
-                //throw new InvalidOperationException();
             });
 
-            Console.WriteLine(string.Format(_successAddActionMessage, groupId, actionObject?.Id, (transaction.IsSuccessful == true ? "Başarılı" : transaction?.Error?.Message)));
+            Console.WriteLine(string.Format(_successAddActionMessage, groupId, actionObject?.Id, operationResult.IsSuccessful ? "Başarılı" : operationResult.Error?.Message));
         }
 
         #region Execute Methods
@@ -60,6 +58,15 @@ namespace CoreLibrary
         #endregion
 
         #region Count Methods
+        public int GetActionsCountWithGroupId(GroupId groupId)
+        {
+            if (_actionDict.TryGetValue(groupId, out var priorityDict))
+                // Tüm PriorityLevel'lar için ActionObject sayısını topla
+                return priorityDict.Values.Sum(actionList => actionList.Count);
+
+            // Eğer verilen groupId'ye ait bir kayıt yoksa 0 döndür
+            return 0;
+        }
         public int GetActionsCountWithPriorityLevel(PriorityLevel level)
         {
             IEnumerable<ActionObject> actionsToExecute = _actionDict.Values
@@ -71,8 +78,17 @@ namespace CoreLibrary
         public int GetAllActionCount()
         {
             IEnumerable<ActionObject> allActions = _actionDict.Values
-                                .SelectMany(levelDict => levelDict.Values.SelectMany(actions => actions.Where(x => x.Transaction == null)));
+                                .SelectMany(levelDict => levelDict.Values.SelectMany(actions => actions.Where(x => x.ActionResult == null)));
             return allActions.Count();
+        }
+        #endregion
+
+        #region Get Methods
+        public ActionObject? GetActionObjectWithId(Guid id)
+        {
+            return _actionDict.Values
+            .SelectMany(priorityDict => priorityDict.Values.SelectMany(list => list))
+            .FirstOrDefault(action => action.Id == id);
         }
         #endregion
     }
@@ -81,10 +97,9 @@ namespace CoreLibrary
     {
         public delegate void ActionDelegate();
         public ActionDelegate ActionPointer { get; set; } = new ActionDelegate(action);
-
         public Guid Id { get; set; } = Guid.NewGuid();
-        public OperationResult? Transaction { get; set; }
-        public void Execute() => Transaction = TryCatch.Run(ActionPointer.Invoke);
+        public OperationResult? ActionResult { get; set; }
+        public void Execute() => ActionResult = TryCatch.Run(ActionPointer.Invoke);
     }
 
     public enum PriorityLevel
