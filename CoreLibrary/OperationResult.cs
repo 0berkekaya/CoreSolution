@@ -43,32 +43,6 @@
         public bool IsSuccessful { get; set; }
 
         /// <summary>
-        /// İşlem sonucunda elde edilen değer.
-        /// </summary>
-        public object? Result { get; set; }
-
-        /// <summary>
-        /// İşlem sırasında oluşabilecek özel bir istisnai durumu temsil eden özel bir hata nesnesi.
-        /// </summary>
-        public OperationError? Error { get; set; }
-    }
-
-    /// <summary>
-    /// Sadece işlem sonuç durumu ve isteğe bağlı mesajı içeren yapı.
-    /// </summary>
-    public class OperationResultInfo
-    {
-        /// <summary>
-        /// İşlemle ilgili bir mesaj.
-        /// </summary>
-        public string? Message { get; set; }
-
-        /// <summary>
-        /// İşlem durumunu gösteren bir değer. True başarılı bir işlemi, false başarısız bir işlemi temsil eder.
-        /// </summary>
-        public bool IsSuccessful { get; set; } = false;
-
-        /// <summary>
         /// İşlem sırasında oluşabilecek özel bir istisnai durumu temsil eden özel bir hata nesnesi.
         /// </summary>
         public OperationError? Error { get; set; }
@@ -98,7 +72,7 @@
         /// <summary>
         /// İstisna ile ilişkili satır numarası.
         /// </summary>
-        public int Row { get; set; }
+        public int Row { get; set; } = 0;
 
         /// <summary>
         /// İstisna ile ilişkili sınıf adı.

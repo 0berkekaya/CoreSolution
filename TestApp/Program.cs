@@ -5,21 +5,34 @@ class TestApp
     static void Main(string[] args)
     {
 
-        var b = tryCatchMethod();
+        OperationResult a = sadeceIslemBilgisiDon();
+        OperationResult<int> b = resultObjesiyleBirlikteDon();
 
 
         //taskManagerTest();
 
     }
 
-    private static OperationResult<int> tryCatchMethod() => TryCatch.Run(() =>
+    private static OperationResult sadeceIslemBilgisiDon() => TryCatch.Run(() =>
     {
         int a = 0;
         int b = 2;
         int c = 3;
         int result = a + (b * c);
+        Console.WriteLine("1. Metot : Doğru Çalıştım");
+    });
+
+    private static OperationResult<int> resultObjesiyleBirlikteDon() => TryCatch.Run(() =>
+    {
+        int a = 0;
+        int b = 2;
+        int c = 3;
+        int result = a + (b * c);
+        Console.WriteLine("2. Metot : Doğru Çalıştım");
         return result;
-    }, new() { CustomExceptionHandling = true, LogErrors = true, ThrowOnException = true });
+    });
+
+
 
     static void taskManagerTest()
     {

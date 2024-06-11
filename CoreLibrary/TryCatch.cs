@@ -5,6 +5,51 @@ namespace CoreLibrary
 {
     public static class TryCatch
     {
+        ///// <summary>
+        ///// Belirtilen bir işlevi çalıştırır ve işlem bilgisini döndürür.
+        ///// </summary>
+        ///// <typeparam name="T">Dönüş değeri türü.</typeparam>
+        ///// <param name="methodRequest">Çalıştırılacak işlev.</param>
+        ///// <param name="tryCatchConfiguration">Try-Catch ayarları (isteğe bağlı).</param>
+        ///// <returns>İşlem bilgisi.</returns>
+        //public static OperationResult<T> Run<T>(Func<OperationResult<T>> methodRequest, TryCatchConfiguration? tryCatchConfiguration = null)
+        //{
+        //    // Try-Catch ayarlarını varsayılan değerle başlat
+        //    tryCatchConfiguration ??= new TryCatchConfiguration();
+
+        //    // İşlem bilgisi nesnesini tanımla ve başlangıçta null olarak ayarla
+        //    OperationResult<T>? transaction = null;
+
+        //    try
+        //    {
+        //        // İşlevi çağır ve işlem bilgisini al
+        //        transaction = methodRequest();
+        //        // İşlem başarılı olduğunu işaretle
+        //        transaction.IsSuccessful = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // İşlem bilgisi nesnesi henüz oluşturulmamışsa yeni bir nesne oluştur
+        //        transaction ??= new OperationResult<T>();
+
+        //        // Hata durumunda istisna bilgisini ve işlem durumunu ayarla
+        //        transaction.Error = ExceptionDetailsBuilder(ex);
+
+        //        // Hata günlüğünü kaydetme ayarı aktifse
+        //        if (tryCatchConfiguration.LogErrors)
+        //        {
+        //            // Hata günlüğünü kaydetme işlemleri burada gerçekleştirilebilir
+        //        }
+
+        //        if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptionMethods.Handler(ex);
+
+        //        if (tryCatchConfiguration.ThrowOnException) throw;
+        //    }
+
+        //    // İşlem bilgisini döndür
+        //    return transaction;
+        //}
+
         /// <summary>
         /// Belirtilen bir işlevi çalıştırır ve işlem bilgisini döndürür.
         /// </summary>
@@ -18,7 +63,7 @@ namespace CoreLibrary
             tryCatchConfiguration ??= new TryCatchConfiguration();
 
             // İşlem bilgisi oluştur
-            OperationResult<T> transaction = new OperationResult<T>();
+            OperationResult<T> transaction = new();
 
             try
             {
@@ -31,7 +76,6 @@ namespace CoreLibrary
             {
                 // Hata durumunda istisna bilgisini ve işlem durumunu ayarla
                 transaction.Error = ExceptionDetailsBuilder(ex);
-                transaction.IsSuccessful = false;
 
                 // Hata günlüğünü kaydetme ayarı aktifse
                 if (tryCatchConfiguration.LogErrors)
@@ -39,54 +83,10 @@ namespace CoreLibrary
                     // Hata günlüğünü kaydetme işlemleri burada gerçekleştirilebilir
                 }
 
-                if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptions.Handler(ex);
-            }
-            // İşlem bilgisini döndür
-            return transaction;
-        }
+                if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptionMethods.Handler(ex);
 
-        /// <summary>
-        /// Belirtilen bir işlevi çalıştırır ve işlem bilgisini döndürür.
-        /// </summary>
-        /// <typeparam name="T">Dönüş değeri türü.</typeparam>
-        /// <param name="methodRequest">Çalıştırılacak işlev.</param>
-        /// <param name="tryCatchConfiguration">Try-Catch ayarları (isteğe bağlı).</param>
-        /// <returns>İşlem bilgisi.</returns>
-        public static OperationResult<T> Run<T>(Func<OperationResult<T>> methodRequest, TryCatchConfiguration? tryCatchConfiguration = null)
-        {
-            // Try-Catch ayarlarını varsayılan değerle başlat
-            tryCatchConfiguration ??= new TryCatchConfiguration();
-
-            // İşlem bilgisi nesnesini tanımla ve başlangıçta null olarak ayarla
-            OperationResult<T>? transaction = null;
-
-            try
-            {
-                // İşlevi çağır ve işlem bilgisini al
-                transaction = methodRequest();
-                // İşlem başarılı olduğunu işaretle
-                transaction.IsSuccessful = true;
-            }
-            catch (Exception ex)
-            {
-                // İşlem bilgisi nesnesi henüz oluşturulmamışsa yeni bir nesne oluştur
-                transaction ??= new OperationResult<T>();
-
-                // Hata durumunda istisna bilgisini ve işlem durumunu ayarla
-                transaction.Error = ExceptionDetailsBuilder(ex);
-                transaction.IsSuccessful = false;
-
-                // Hata günlüğünü kaydetme ayarı aktifse
-                if (tryCatchConfiguration.LogErrors)
-                {
-                    // Hata günlüğünü kaydetme işlemleri burada gerçekleştirilebilir
-                }
-                if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptions.Handler(ex);
-
-                // Throw ayarı aktifse istisnayı tekrar fırlat
                 if (tryCatchConfiguration.ThrowOnException) throw;
             }
-
             // İşlem bilgisini döndür
             return transaction;
         }
@@ -103,7 +103,7 @@ namespace CoreLibrary
             tryCatchConfiguration ??= new TryCatchConfiguration();
 
             // İşlem bilgisi nesnesini oluştur
-            OperationResult transaction = new OperationResult();
+            OperationResult transaction = new();
 
             try
             {
@@ -115,7 +115,6 @@ namespace CoreLibrary
             catch (Exception ex)
             {
                 // Hata durumunda işlem bilgisini ve durumunu ayarla
-                transaction.IsSuccessful = false;
                 transaction.Error = ExceptionDetailsBuilder(ex);
 
                 // Hata günlüğünü kaydetme ayarı aktifse
@@ -124,9 +123,8 @@ namespace CoreLibrary
                     // Hata günlüğünü kaydetme işlemleri burada gerçekleştirilebilir
                 }
 
-                if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptions.Handler(ex);
+                if (tryCatchConfiguration.CustomExceptionHandling) CustomExceptionMethods.Handler(ex);
 
-                // Throw ayarı aktifse istisnayı tekrar fırlat
                 if (tryCatchConfiguration.ThrowOnException) throw;
             }
 
@@ -141,7 +139,7 @@ namespace CoreLibrary
         /// <returns>Oluşturulan özel istisna nesnesi.</returns>
         private static OperationError ExceptionDetailsBuilder(Exception exception)
         {
-            OperationError transactionError = new OperationError
+            OperationError transactionError = new()
             {
                 Message = exception.Message,
                 Details = []
@@ -155,14 +153,24 @@ namespace CoreLibrary
                 StackFrame frame = stackTrace.GetFrame(i)!;
                 MethodBase methodInformation = frame.GetMethod()!;
 
-                transactionError.Details.Add(new ExceptionDetail
-                {
-                    Row = frame.GetFileLineNumber(),
-                    Class = methodInformation.ReflectedType?.FullName + "." + methodInformation.Name,
-                });
-            }
+                string? className = methodInformation.ReflectedType?.FullName;
+                string methodName = methodInformation.Name;
 
-            // Oluşturulan özel istisna nesnesini döndür
+                int mnStartIndex = methodName.IndexOf('<') + 1;
+                int mnEndIndex = methodName.IndexOf('>');
+
+                if (className != ("CoreLibrary.TryCatch"))
+                {
+                    className = methodInformation.Module.Name.Replace(".dll", "");
+                    methodName = methodName[mnStartIndex..mnEndIndex];
+
+                    transactionError.Details.Add(new ExceptionDetail
+                    {
+                        Row = frame.GetFileLineNumber(),
+                        Class = className + "." + methodName,
+                    });
+                }
+            }
             return transactionError;
         }
     }
