@@ -5,6 +5,7 @@ using Docker.DotNet;
 using System.Runtime.InteropServices;
 using TestApp.Docker;
 using TestApp.Docker.Enums;
+using TestApp.Docker.Containers;
 
 namespace TestApp
 {
@@ -27,6 +28,9 @@ namespace TestApp
 
 
             DockerManager dockerManager = new();
+
+            var redisContainer = new RedisContainer();
+            var maxSize = redisContainer.MaxPort;
 
             //string containerId = await containerManager.CreateContainerAsync(ContainerName.Redis, command: "redis-server");
             await dockerManager.StartContainerWithPrefixAsync(ContainerName.Redis);
