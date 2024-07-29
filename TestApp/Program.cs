@@ -1,128 +1,201 @@
 ﻿using CoreLibrary;
+using CoreLibrary.Interface;
+using Docker.DotNet.Models;
+using Docker.DotNet;
+using System.Runtime.InteropServices;
+using TestApp.Docker;
+using TestApp.Docker.Enums;
 
-class TestApp
+namespace TestApp
 {
-    static void Main(string[] args)
+    public class TestApp
     {
-
-        OperationResult a = sadeceIslemBilgisiDon();
-        OperationResult<int> b = resultObjesiyleBirlikteDon();
-
-
-        //taskManagerTest();
-
-    }
-
-    private static OperationResult sadeceIslemBilgisiDon() => TryCatch.Run(() =>
-    {
-        int a = 0;
-        int b = 2;
-        int c = 3;
-        int result = a + (b * c);
-        Console.WriteLine("1. Metot : Doğru Çalıştım");
-    });
-
-    private static OperationResult<int> resultObjesiyleBirlikteDon() => TryCatch.Run(() =>
-    {
-        int a = 0;
-        int b = 2;
-        int c = 3;
-        int result = a + (b * c);
-        Console.WriteLine("2. Metot : Doğru Çalıştım");
-        return result;
-    });
-
-
-
-    static void taskManagerTest()
-    {
-        ActionManager actionManager = new();
-        ActionManager actionManager1 = new();
-
-        actionManager.Add(() =>
+        static async Task Main()
         {
-            var berke = 24;
-            string helloWorld = string.Empty;
-            berke.ToString(string.Empty);
-            helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+
+            IOperationResult a = SadeceIslemBilgisiDon(5);
+            //IOperationResult<int> b = ResultObjesiyleBirlikteDon(5);
+            //Logger.Log.Success(Tools.ObjectToJsonString(a));
+            //Console.WriteLine(Tools.ObjectToJsonString(a));
+
+
+            //Console.WriteLine(TryCatch.Tools.ObjectToJsonString(a));
+
+
+
+            //TaskManagerTestMethod();
+
+
+            DockerManager dockerManager = new();
+
+            //string containerId = await containerManager.CreateContainerAsync(ContainerName.Redis, command: "redis-server");
+            await dockerManager.StartContainerWithPrefixAsync(ContainerName.Redis);
+
+            // Mevcut Redis konteynerlerini kontrol et
+            //var allRedisContainer = await containerManager.GetContainersAsync(ContainerName.Redis);
+            //List<ushort> usedPorts = allRedisContainer.Select(c => c.PrivatePort).ToList();
+
+
+            //await containerManager.StopAllContainersAsync();
+
+            //await containerManager.RestartContainerAsync(true);
+
+            await dockerManager.DeleteAllContainersWithContainerNameAsync(ContainerName.Redis);
+
+        }
+
+        private static IOperationResult SadeceIslemBilgisiDon(int berke) => TryCatch.Run(() =>
+        {
+            int a = 0;
+            int b = 2;
+            int c = 3;
+            int result = a + (b * c) + berke;
+            throw new NotFiniteNumberException();
+            //Console.WriteLine("1. Metot : Doğru Çalıştım");
+        }, new()
+        {
+            Logging = true
         });
 
-        actionManager.Add(() =>
+        private static IOperationResult<int> ResultObjesiyleBirlikteDon(int berke) => TryCatch.Run(() =>
         {
-            var berke = 24;
-            string helloWorld = string.Empty;
-            berke.ToString(string.Empty);
-            helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+            int a = 0;
+            int b = 2;
+            int c = 3;
+            int result = a + (b * c) + berke;
+            Console.WriteLine("2. Metot : Doğru Çalıştım");
+            return result;
+        });
 
-        }, GroupId.Berke, PriorityLevel.Normal);
 
-        actionManager1.Add(() =>
+
+        private static void TaskManagerTestMethod()
         {
-            var berke = 24;
-            string helloWorld = string.Empty;
-            berke.ToString(string.Empty);
-            helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+            TaskManager.Instance.AddTask(() =>
+            {
+                var berke = 24;
+                string helloWorld = string.Empty;
+                berke.ToString(string.Empty);
+                helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+                Console.WriteLine("Timersız : " + helloWorld);
+            }, TaskGroup.Rapor, TaskPriority.VeryHigh);
 
-        }, GroupId.Berke, PriorityLevel.Normal);
+            TaskManager.Instance.AddTask(() =>
+            {
+                var berke = 24;
+                string helloWorld = string.Empty;
+                berke.ToString(string.Empty);
+                helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+                Console.WriteLine("Timersız : " + helloWorld);
+            }, TaskGroup.Rapor, TaskPriority.VeryHigh);
 
-        actionManager.Add(() =>
-        {
+            TaskManager.Instance.AddTask(() =>
+            {
+                var berke = 24;
+                string helloWorld = string.Empty;
+                berke.ToString(string.Empty);
+                helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+                Console.WriteLine(helloWorld);
+                throw new Exception("HelloMyWorld");
+            }, TaskGroup.Rapor, TaskPriority.VeryHigh, null, TimeSpan.FromSeconds(1));
 
-            var berke = 24;
-            string helloWorld = string.Empty;
-            berke.ToString(string.Empty);
-            helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+            //ActionManager.Manager.Add(() =>
+            //{
+            //    var berke = 24;
+            //    string helloWorld = string.Empty;
+            //    berke.ToString(string.Empty);
+            //    helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
 
-        }, GroupId.Berke, PriorityLevel.High);
+            //}, GroupId.Berke, PriorityLevel.Normal);
 
-        actionManager.Add(() =>
-        {
-            var berke = 24;
-            string helloWorld = string.Empty;
-            berke.ToString(string.Empty);
-            helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+            //ActionManager.Manager.Add(() =>
+            //{
+            //    var berke = 24;
+            //    string helloWorld = string.Empty;
+            //    berke.ToString(string.Empty);
+            //    helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
 
-        }, GroupId.Muhammet, PriorityLevel.Low);
+            //}, GroupId.Berke, PriorityLevel.Normal);
 
-        actionManager.Add(() =>
-        {
-            var berke = 24;
-            string helloWorld = string.Empty;
-            berke.ToString(string.Empty);
-            helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+            //ActionManager.Manager.Add(() =>
+            //{
 
-        }, GroupId.Muhammet, PriorityLevel.Normal);
+            //    var berke = 24;
+            //    string helloWorld = string.Empty;
+            //    berke.ToString(string.Empty);
+            //    helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+            //    throw new NotImplementedException();
 
-        actionManager.Add(() =>
-        {
-            var berke = 24;
-            string helloWorld = string.Empty;
-            berke.ToString(string.Empty);
-            helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+            //}, GroupId.Berke, PriorityLevel.High);
 
-        }, GroupId.Muhammet, PriorityLevel.Normal);
+            //ActionManager.Manager.Add(() =>
+            //{
+            //    var berke = 24;
+            //    string helloWorld = string.Empty;
+            //    berke.ToString(string.Empty);
+            //    helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
 
-        actionManager.Add(() =>
-        {
-            var berke = 24;
-            string helloWorld = string.Empty;
-            berke.ToString(string.Empty);
-            helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+            //}, GroupId.Muhammet, PriorityLevel.Low);
 
-        }, GroupId.Muhammet, PriorityLevel.VeryHigh);
+            //ActionManager.Manager.Add(() =>
+            //{
+            //    var berke = 24;
+            //    string helloWorld = string.Empty;
+            //    berke.ToString(string.Empty);
+            //    helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+
+            //}, GroupId.Muhammet, PriorityLevel.Normal);
+
+            //ActionManager.Manager.Add(() =>
+            //{
+            //    var berke = 24;
+            //    string helloWorld = string.Empty;
+            //    berke.ToString(string.Empty);
+            //    helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+            //    throw new AppDomainUnloadedException();
+            //}, GroupId.Muhammet, PriorityLevel.Normal);
+
+            //ActionManager.Manager.Add(() =>
+            //{
+            //    var berke = 24;
+            //    string helloWorld = string.Empty;
+            //    berke.ToString(string.Empty);
+            //    helloWorld = "     Hello World       ".Trim().PadLeft(2, '0');
+
+            //}, GroupId.Muhammet, PriorityLevel.VeryHigh);
 
 
-        actionManager.GetActionsCountWithGroupId(GroupId.Muhammet);
-        actionManager.ExecuteWithPriorityLevel(PriorityLevel.Normal);
-        actionManager.ExecuteWithActionId(Guid.NewGuid());
-        actionManager.ExecuteWithGroupId(GroupId.Berke);
-        actionManager.ExecuteWithGroupId(GroupId.Muhammet);
+            //ActionManager.Manager.GetActionsCountWithGroupId(GroupId.Muhammet);
+            //ActionManager.Manager.ExecuteWithPriorityLevel(PriorityLevel.VeryHigh);
+            //ActionManager.Manager.ExecuteWithActionId(Guid.NewGuid());
+            //ActionManager.Manager.ExecuteWithGroupId(GroupId.Berke);
+            //ActionManager.Manager.ExecuteWithGroupId(GroupId.Default);
 
-        //ActionObject? berke = actionManager.GetActionObjectWithId(Guid.NewGuid());
+            //ActionObject? berke = actionManager.GetActionObjectWithId(Guid.NewGuid());
 
-        Console.WriteLine($"{actionManager.GetActionsCountWithPriorityLevel(PriorityLevel.Normal)} bu kadar normal görev var.");
-        Console.WriteLine($"{actionManager.GetAllActionCount()} toplam görev var.");
+            //Console.WriteLine($"{ActionManager.Manager.GetActionsCountWithPriorityLevel(PriorityLevel.Normal)} bu kadar normal görev var.");
+
+
+            //Console.WriteLine($"{ActionManager.Manager.GetActionCount()} Tüm görev sayısı görev var.");
+            //Console.WriteLine($"{ActionManager.Manager.GetActionCount(ActionFilter.Success)} Başarılı görev var.");
+            //Console.WriteLine($"{ActionManager.Manager.GetActionCount(ActionFilter.Error)} Başarısız görev var.");
+            //Console.WriteLine($"{ActionManager.Manager.GetActionCount(ActionFilter.Null)} Çalışmamış görev var.");
+
+            IEnumerable<(Guid Id, TaskStatus Status)> b = TaskManager.Instance.GetAllTaskStatuses();
+            foreach (var item in b)
+            {
+                Console.WriteLine("ID : " + item.Id + "|" + Tools.ObjectToJsonString(item.Status));
+
+            }
+            while (true)
+            {
+                string? idString = Console.ReadLine();
+                if (!string.IsNullOrEmpty(idString)) TaskManager.Instance.StopTask(Tools.StringToGuid(idString));
+
+            }
+
+        }
+
     }
-
 }
 

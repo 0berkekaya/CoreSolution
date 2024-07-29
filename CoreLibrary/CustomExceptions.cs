@@ -1,4 +1,6 @@
 ﻿
+using CoreLibrary.Extensions;
+
 namespace CoreLibrary
 {
     /// <summary>
@@ -44,13 +46,13 @@ namespace CoreLibrary
         public CustomExceptionBase() { }
         public CustomExceptionBase(string? message = null) : base(message)
         {
-            if (message.IsNullOrEmpty().NotThis()) workingMethod(message);
+            if (!message.IsNullOrEmpty()) workingMethod(message);
             else Console.WriteLine(_defaultMessage);
         }
 
         private static void workingMethod(string? message)
         {
-            if (message.IsNullOrEmpty().NotThis()) Console.WriteLine(message);
+            if (!message.IsNullOrEmpty()) Console.WriteLine(message);
         }
     }
 }

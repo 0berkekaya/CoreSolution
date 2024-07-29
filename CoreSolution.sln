@@ -3,9 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34707.107
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{1B1D5811-A895-49F3-9CB7-047980EFB326}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{1B1D5811-A895-49F3-9CB7-047980EFB326}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreLibrary", "CoreLibrary\CoreLibrary.csproj", "{0D0B68B2-E297-498B-8445-8756C5936A61}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CB48DE45-0DA5-4767-ACC0-B4A85D747EC6}"
+	ProjectSection(SolutionItems) = preProject
+		redis-master-deployment.yaml = redis-master-deployment.yaml
+		redis-master-service.yaml = redis-master-service.yaml
+		redis-replica-deployment.yaml = redis-replica-deployment.yaml
+		redis-replica-hpa.yaml = redis-replica-hpa.yaml
+		redis-replica-service.yaml = redis-replica-service.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
